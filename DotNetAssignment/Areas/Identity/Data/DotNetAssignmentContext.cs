@@ -1,5 +1,6 @@
 ﻿using DotNetAssignment.Areas.Identity.Data;
 using DotNetAssignment.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,35 @@ public class DotNetAssignmentContext : IdentityDbContext<DotNetAssignmentUser>
         {
             builder.Property(x => x.Description)
             .HasMaxLength(500);
+        });
+
+        modelBuilder.Entity<IdentityUser>(builder =>
+        {
+            builder.ToTable(name: "User");
+        });
+        modelBuilder.Entity<IdentityRole>(builder =>
+        {
+            builder.ToTable(name: "Role");
+        });
+        modelBuilder.Entity<IdentityUserRole<string>>(builder =>
+        {
+            builder.ToTable("UserRoles");
+        });
+        modelBuilder.Entity<IdentityUserClaim<string>>(builder =>
+        {
+            builder.ToTable("UserClaims");
+        });
+        modelBuilder.Entity<IdentityUserLogin<string>>(builder =>
+        {
+            builder.ToTable("UserLogins");
+        });
+        modelBuilder.Entity<IdentityRoleClaim<string>>(builder =>
+        {
+            builder.ToTable("RoleClaims");
+        });
+        modelBuilder.Entity<IdentityUserToken<string>>(builder =>
+        {
+            builder.ToTable("UserTokens");
         });
     }
 }

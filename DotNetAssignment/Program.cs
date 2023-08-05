@@ -1,6 +1,7 @@
 using DotNetAssignment.Areas.Identity.Data;
 using DotNetAssignment.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -9,8 +10,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DotNetAssignmentContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddDefaultIdentity<DotNetAssignmentUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<DotNetAssignmentContext>();
+builder.Services.AddIdentity<DotNetAssignmentUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<DotNetAssignmentContext>()
+    .AddDefaultUI()
+    .AddDefaultTokenProviders();
 
 // Add services to the container.
 

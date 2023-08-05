@@ -67,19 +67,26 @@ namespace DotNetAssignment.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Display(Name = "Profile Picture")]
+            public byte[] ProfilePicture { get; set; }
+
         }
 
         private async Task LoadAsync(DotNetAssignmentUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var name = user.Name;
+            var email = user.Email;
+            var profilePicture = user.ProfilePicture;
 
             Username = userName;
 
             Input = new InputModel
             {
-                Name = user.Name,
-                Email = user.Email,
+                Name = name,
+                Email = email,
+                ProfilePicture = profilePicture,
                 PhoneNumber = phoneNumber
             };
         }
@@ -129,6 +136,16 @@ namespace DotNetAssignment.Areas.Identity.Pages.Account.Manage
             if (Input.Email != user.Email)
             {
                 user.Email = Input.Email;
+            }
+
+            if(Request.Form.Files.Count > 0)
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    user.ProfilePicture = dataStream.ToArray();
+                }
             }
 
             await _userManager.UpdateAsync(user);

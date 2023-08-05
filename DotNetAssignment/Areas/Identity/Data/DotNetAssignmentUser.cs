@@ -12,8 +12,8 @@ public class DotNetAssignmentUser : IdentityUser
     [PersonalData]
     public string PhoneNumber { get; set; }
 
-    [NotMapped]
-    public int? PictureId { get; set; }
+    
+    public byte[] ProfilePicture { get; set; }
 
 
 }
