@@ -2,14 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using DotNetAssignment.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace DotNetAssignment.Areas.Identity.Pages.Account.Manage
 {
@@ -59,6 +56,17 @@ namespace DotNetAssignment.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Full name")]
+            public string Name { get; set; }
+            
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+
         }
 
         private async Task LoadAsync(DotNetAssignmentUser user)
@@ -70,6 +78,8 @@ namespace DotNetAssignment.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                Name = user.Name,
+                Email = user.Email,
                 PhoneNumber = phoneNumber
             };
         }
@@ -111,6 +121,17 @@ namespace DotNetAssignment.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            if (Input.Name != user.Name)
+            {
+                user.Name = Input.Name;
+            }
+
+            if (Input.Email != user.Email)
+            {
+                user.Email = Input.Email;
+            }
+
+            await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
